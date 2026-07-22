@@ -47,10 +47,12 @@ export function CommandPalette({ workspaces, onClose, onPick }: Props) {
   }, [selected]);
 
   function handleKey(e: React.KeyboardEvent) {
-    if (e.key === "ArrowDown") {
+    if (e.key === "ArrowDown" || (e.key === "Tab" && !e.shiftKey)) {
+      // Trap Tab inside the palette (Tab moves selection down instead of letting
+      // focus escape to Chrome's side-panel chrome).
       e.preventDefault();
       setSelected((s) => Math.min(s + 1, Math.max(0, flat.length - 1)));
-    } else if (e.key === "ArrowUp") {
+    } else if (e.key === "ArrowUp" || (e.key === "Tab" && e.shiftKey)) {
       e.preventDefault();
       setSelected((s) => Math.max(s - 1, 0));
     } else if (e.key === "Enter") {
@@ -61,6 +63,14 @@ export function CommandPalette({ workspaces, onClose, onPick }: Props) {
       e.preventDefault();
       onClose();
     }
+  }
+
+  // If focus somehow leaves the input while the palette is open, pull it straight
+  // back so keystrokes never reach Chrome's own side-panel buttons.
+  function handleBlur() {
+    requestAnimationFrame(() => {
+      if (document.activeElement !== inputRef.current) inputRef.current?.focus();
+    });
   }
 
   let flatIndex = -1;
@@ -107,6 +117,7 @@ export function CommandPalette({ workspaces, onClose, onPick }: Props) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKey}
+          onBlur={handleBlur}
           aria-label="Search"
           aria-activedescendant={flat[selected] ? `result-${selected}` : undefined}
         />

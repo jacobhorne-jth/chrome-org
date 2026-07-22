@@ -23,6 +23,7 @@ export function App() {
 
   // Track palette state in a ref so the global key handler always reads the latest.
   const paletteOpenRef = useRef(paletteOpen);
+  const prevPaletteOpenRef = useRef(paletteOpen);
   useEffect(() => {
     paletteOpenRef.current = paletteOpen;
   }, [paletteOpen]);
@@ -87,6 +88,21 @@ export function App() {
   // Remember which row was last focused so we can restore it after the panel
   // loses and regains focus (e.g. switching to another window and back).
   const lastFocusedRowRef = useRef<HTMLElement | null>(null);
+
+  // When the palette closes, return keyboard focus to a workspace row so Tab/Esc
+  // keep working instead of focus falling back to Chrome's side-panel chrome.
+  useEffect(() => {
+    const was = prevPaletteOpenRef.current;
+    prevPaletteOpenRef.current = paletteOpen;
+    if (was && !paletteOpen && view.mode === "list") {
+      const remembered = lastFocusedRowRef.current;
+      const target =
+        remembered && document.contains(remembered)
+          ? remembered
+          : document.querySelector<HTMLElement>('.row[role="button"]');
+      target?.focus();
+    }
+  }, [paletteOpen, view.mode]);
   useEffect(() => {
     function trackFocus(e: FocusEvent) {
       const t = e.target as HTMLElement | null;
