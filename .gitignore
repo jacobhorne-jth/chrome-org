@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+.vite/
+playwright-report/
+test-results/
+*.tsbuildinfo
+apps/extension/dist/
+apps/native-host/dist/
+packages/shared/dist/
