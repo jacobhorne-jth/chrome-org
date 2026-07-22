@@ -84,6 +84,38 @@ export function App() {
     }
   }, [view.mode, paletteOpen, workspaces.length]);
 
+  // Remember which row was last focused so we can restore it after the panel
+  // loses and regains focus (e.g. switching to another window and back).
+  const lastFocusedRowRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    function trackFocus(e: FocusEvent) {
+      const t = e.target as HTMLElement | null;
+      if (t && t.classList?.contains("row")) lastFocusedRowRef.current = t;
+    }
+    // When the panel becomes active again but has no focused control, pull focus
+    // back to the last row so keyboard (Tab/arrows/Esc) works without a click.
+    function reclaim() {
+      if (document.visibilityState !== "visible") return;
+      if (paletteOpenRef.current || view.mode !== "list") return;
+      const active = document.activeElement;
+      if (active && active !== document.body && active !== document.documentElement) return;
+      const remembered = lastFocusedRowRef.current;
+      const target =
+        remembered && document.contains(remembered)
+          ? remembered
+          : document.querySelector<HTMLElement>('.row[role="button"]');
+      target?.focus();
+    }
+    document.addEventListener("focusin", trackFocus);
+    window.addEventListener("focus", reclaim);
+    document.addEventListener("visibilitychange", reclaim);
+    return () => {
+      document.removeEventListener("focusin", trackFocus);
+      window.removeEventListener("focus", reclaim);
+      document.removeEventListener("visibilitychange", reclaim);
+    };
+  }, [view.mode]);
+
   function flashToast(msg: string) {
     setToast(msg);
     window.setTimeout(() => setToast(null), 4000);
@@ -167,13 +199,24 @@ export function App() {
           style={{ textAlign: "left", color: "var(--text-muted)" }}
           onClick={() => setPaletteOpen(true)}
           aria-label="Open command palette"
+          tabIndex={-1}
         >
           Search… (⌘K)
         </button>
-        <button className="icon-btn" title="New from current window" onClick={createFromWindow}>
+        <button
+          className="icon-btn"
+          title="New from current window"
+          onClick={createFromWindow}
+          tabIndex={-1}
+        >
           ＋win
         </button>
-        <button className="icon-btn" title="New empty workspace" onClick={createEmpty}>
+        <button
+          className="icon-btn"
+          title="New empty workspace"
+          onClick={createEmpty}
+          tabIndex={-1}
+        >
           ＋
         </button>
         <OverflowMenu
@@ -224,6 +267,7 @@ export function App() {
           className="overflow-btn"
           onClick={checkHealth}
           title={health?.message ?? "Checking…"}
+          tabIndex={-1}
         >
           companion:{" "}
           <span className={health?.ok ? "status-ok" : "status-bad"}>
@@ -268,6 +312,7 @@ function OverflowMenu({
           setOpen((o) => !o);
         }}
         title="More"
+        tabIndex={-1}
       >
         ⋯
       </button>
