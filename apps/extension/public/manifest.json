@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "chrome-org",
+  "version": "0.1.0",
+  "description": "Private local-first workspace launcher for Chrome.",
+  "minimum_chrome_version": "116",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "chrome-org: open side panel"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "permissions": ["tabs", "storage", "sidePanel", "nativeMessaging"],
+  "commands": {
+    "open-command-palette": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K",
+        "mac": "Command+Shift+K"
+      },
+      "description": "Open the chrome-org command palette"
+    },
+    "open-side-panel": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+O",
+        "mac": "Command+Shift+O"
+      },
+      "description": "Open the chrome-org side panel"
+    }
+  }
+}

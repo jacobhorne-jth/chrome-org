@@ -62,6 +62,7 @@ export interface BrowserApi {
     index?: number;
   }): Promise<TabInfo>;
   activateTab(tabId: number): Promise<void>;
+  updateTabState(tabId: number, state: { pinned?: boolean; active?: boolean }): Promise<void>;
 
   // Native messaging (one-shot request/response)
   sendNativeMessage(hostName: string, message: unknown): Promise<unknown>;
@@ -142,6 +143,12 @@ export function createRealBrowserApi(): BrowserApi {
     },
     async activateTab(tabId) {
       await c.tabs.update(tabId, { active: true });
+    },
+    async updateTabState(tabId, state) {
+      await c.tabs.update(tabId, {
+        ...(state.pinned !== undefined ? { pinned: state.pinned } : {}),
+        ...(state.active !== undefined ? { active: state.active } : {}),
+      });
     },
     async sendNativeMessage(hostName, message) {
       return await c.runtime.sendNativeMessage(hostName, message as object);

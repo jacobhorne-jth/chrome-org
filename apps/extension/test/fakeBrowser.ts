@@ -171,6 +171,19 @@ export class FakeBrowser implements BrowserApi {
     }
   }
 
+  async updateTabState(
+    tabId: number,
+    state: { pinned?: boolean; active?: boolean },
+  ): Promise<void> {
+    for (const win of this.windows.values()) {
+      const found = win.tabs.find((t) => t.id === tabId);
+      if (!found) continue;
+      if (state.pinned !== undefined) found.pinned = state.pinned;
+      if (state.active) win.tabs.forEach((t) => (t.active = t.id === tabId));
+      return;
+    }
+  }
+
   async sendNativeMessage(_hostName: string, message: unknown): Promise<unknown> {
     this.sendNativeCalls.push(message);
     if (!this.nativeHandler) throw new Error("native host not installed");
