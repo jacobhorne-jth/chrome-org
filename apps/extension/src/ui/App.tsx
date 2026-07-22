@@ -56,18 +56,16 @@ export function App() {
         e.preventDefault();
         setPaletteOpen(true);
       } else if (e.key === "Escape") {
-        if (paletteOpenRef.current) {
-          setPaletteOpen(false);
-        } else if (view.mode === "list") {
-          // Nothing open in-panel — close the side panel itself.
-          e.preventDefault();
-          window.close();
-        }
+        // Only ever close the palette. We deliberately do NOT call window.close()
+        // here: from a side panel that call is unreliable on Chrome and can act on
+        // the whole browser window (looks like a "minimize"). Use the panel's ✕ to
+        // close it, or the toolbar keyboard shortcut.
+        if (paletteOpenRef.current) setPaletteOpen(false);
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [view.mode]);
+  }, []);
 
   // Pull keyboard focus into the panel by focusing the first workspace row once
   // it renders. Without this, a freshly-opened side panel has no focus, so Tab
