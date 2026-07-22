@@ -57,12 +57,9 @@ export function App() {
       } else if (e.key === "Escape") {
         if (paletteOpenRef.current) {
           setPaletteOpen(false);
-        } else if (view.mode === "list" && document.hasFocus()) {
-          // Nothing open in-panel — close the side panel itself. preventDefault
-          // stops Chrome's default Escape handling (which could otherwise act on
-          // the parent window).
+        } else if (view.mode === "list") {
+          // Nothing open in-panel — close the side panel itself.
           e.preventDefault();
-          e.stopPropagation();
           window.close();
         }
       }
@@ -70,6 +67,22 @@ export function App() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [view.mode]);
+
+  // Pull keyboard focus into the panel by focusing the first workspace row once
+  // it renders. Without this, a freshly-opened side panel has no focus, so Tab
+  // and Escape keystrokes never reach it (they go to the underlying page).
+  const didInitialFocusRef = useRef(false);
+  useEffect(() => {
+    if (view.mode !== "list" || paletteOpen || workspaces.length === 0) return;
+    if (didInitialFocusRef.current) return;
+    // Only take focus if nothing in the panel is focused yet (don't steal it).
+    if (document.activeElement && document.activeElement !== document.body) return;
+    const firstRow = document.querySelector<HTMLElement>('.row[role="button"]');
+    if (firstRow) {
+      firstRow.focus();
+      didInitialFocusRef.current = true;
+    }
+  }, [view.mode, paletteOpen, workspaces.length]);
 
   function flashToast(msg: string) {
     setToast(msg);

@@ -73,6 +73,12 @@ export function WorkspaceRow({ workspace: ws, onLaunch, onEdit, onChanged }: Pro
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             onLaunch();
+          } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault();
+            const rows = Array.from(document.querySelectorAll<HTMLElement>('.row[role="button"]'));
+            const idx = rows.indexOf(e.currentTarget as HTMLElement);
+            const next = e.key === "ArrowDown" ? rows[idx + 1] : rows[idx - 1];
+            next?.focus();
           }
         }}
       >
@@ -93,6 +99,7 @@ export function WorkspaceRow({ workspace: ws, onLaunch, onEdit, onChanged }: Pro
             <button
               className="overflow-btn"
               style={{ padding: 0 }}
+              tabIndex={-1}
               onClick={() => setExpanded((x) => !x)}
               aria-expanded={expanded}
               title="Toggle tab list"
@@ -122,6 +129,7 @@ export function WorkspaceRow({ workspace: ws, onLaunch, onEdit, onChanged }: Pro
         <div style={{ position: "relative" }}>
           <button
             className="overflow-btn"
+            tabIndex={-1}
             aria-haspopup="menu"
             aria-expanded={menuOpen}
             aria-label={`More actions for ${ws.name}`}
