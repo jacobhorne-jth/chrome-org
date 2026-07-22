@@ -31,6 +31,18 @@ export function App() {
     void checkHealth();
   }, [checkHealth]);
 
+  // If the panel was just opened by the "open command palette" shortcut, a flag
+  // is waiting for us — open the palette immediately, then clear it.
+  useEffect(() => {
+    chrome.storage.session?.get("pending_open_palette").then((r) => {
+      const ts = (r as { pending_open_palette?: number }).pending_open_palette;
+      if (ts && Date.now() - ts < 5000) {
+        setPaletteOpen(true);
+        void chrome.storage.session.remove("pending_open_palette");
+      }
+    });
+  }, []);
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {

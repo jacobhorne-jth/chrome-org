@@ -194,23 +194,37 @@ chrome.runtime.onInstalled.addListener(() => {
   }
 });
 
-chrome.commands.onCommand.addListener(async (command) => {
-  if (command === "open-command-palette" || command === "open-side-panel") {
-    const windowId = await currentWindowId();
-    try {
-      if (windowId !== undefined && chrome.sidePanel?.open) {
-        await chrome.sidePanel.open({ windowId });
-      }
-    } catch {
-      /* side panel may already be open */
-    }
-    if (command === "open-command-palette") {
-      // Tell the panel to focus its palette (it may take a moment to mount).
-      setTimeout(() => {
-        chrome.runtime.sendMessage({ type: "openPalette" }).catch(() => {});
-      }, 150);
-    }
+// IMPORTANT: chrome.sidePanel.open() must be called synchronously inside the
+// user gesture. The onCommand event hands us the active tab, so we can open the
+// panel immediately without any `await` (which would consume the gesture and
+// make open() silently fail).
+chrome.commands.onCommand.addListener((command, tab) => {
+  if (command !== "open-command-palette" && command !== "open-side-panel") return;
+
+  const windowId = tab?.windowId;
+
+  // Set a short-lived flag first (fire-and-forget) so a freshly-opened panel can
+  // open its palette on mount, even before its message listener is ready.
+  if (command === "open-command-palette") {
+    void chrome.storage.session?.set({ pending_open_palette: Date.now() });
   }
+
+  if (windowId === undefined || !chrome.sidePanel?.open) return;
+
+  chrome.sidePanel
+    .open({ windowId })
+    .then(() => {
+      if (command === "open-command-palette") {
+        // Also message the panel in case it was already open.
+        chrome.runtime.sendMessage({ type: "openPalette" }).catch(() => {});
+      }
+    })
+    .catch(() => {
+      /* panel may already be open; the message/flag path still applies */
+      if (command === "open-command-palette") {
+        chrome.runtime.sendMessage({ type: "openPalette" }).catch(() => {});
+      }
+    });
 });
 
 export {};
