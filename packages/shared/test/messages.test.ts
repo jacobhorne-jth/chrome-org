@@ -1,10 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  nativeRequestSchema,
-  pathSchema,
-  urlSchema,
-  isShellSafe,
-} from "../src/messages.js";
+import { nativeRequestSchema, pathSchema, urlSchema, isShellSafe } from "../src/messages.js";
 
 describe("pathSchema", () => {
   it("accepts absolute paths and paths with spaces", () => {

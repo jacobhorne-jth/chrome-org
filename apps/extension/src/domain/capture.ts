@@ -33,7 +33,7 @@ export function captureWindowState(tabs: TabInfo[], bounds?: WindowBounds): Work
   const savedTabs: SavedTab[] = [];
   let activeTabIndex = 0;
 
-  sorted.forEach((tab, i) => {
+  sorted.forEach((tab) => {
     const url = tabUrl(tab);
     if (!url) return;
     if (tab.active) activeTabIndex = savedTabs.length;

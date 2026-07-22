@@ -231,7 +231,10 @@ export function WorkspaceEditor({ workspace, onDone }: Props) {
       ))}
 
       <div className="row-buttons">
-        <button className="ghost-btn" onClick={() => setActions((p) => [...p, blankAction("vscode")])}>
+        <button
+          className="ghost-btn"
+          onClick={() => setActions((p) => [...p, blankAction("vscode")])}
+        >
           + Add action
         </button>
       </div>

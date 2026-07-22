@@ -31,7 +31,9 @@ export class NativeClient {
       raw = await Promise.race([this.api.sendNativeMessage(NATIVE_HOST_NAME, message), timeout]);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      if (/not found|not installed|Specified native messaging host|forbidden|Access to/i.test(msg)) {
+      if (
+        /not found|not installed|Specified native messaging host|forbidden|Access to/i.test(msg)
+      ) {
         throw new NativeUnavailableError(
           "Native companion is not installed. Run scripts/install-native-host.mjs.",
         );
@@ -89,7 +91,8 @@ export async function runLaunchAction(
   try {
     const res = await client.send(actionToRequest(action));
     return {
-      status: res.status === "success" ? "success" : res.status === "fallback" ? "fallback" : "error",
+      status:
+        res.status === "success" ? "success" : res.status === "fallback" ? "fallback" : "error",
       ...(res.message ? { message: res.message } : {}),
     };
   } catch (err) {

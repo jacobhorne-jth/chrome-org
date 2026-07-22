@@ -103,7 +103,9 @@ export function App() {
     e.target.value = "";
     if (!file) return;
     const text = await file.text();
-    const replace = window.confirm("Replace ALL current workspaces with this backup? Cancel to merge.");
+    const replace = window.confirm(
+      "Replace ALL current workspaces with this backup? Cancel to merge.",
+    );
     const res = await rpc({ type: "importData", json: text, mode: replace ? "replace" : "merge" });
     if (res.ok) flashToast(`Imported ${res.data.imported} workspace(s)`);
     else flashToast(res.error);
@@ -200,7 +202,11 @@ export function App() {
   );
 }
 
-function OverflowMenu({ items }: { items: { label: string; onClick: () => void; danger?: boolean }[] }) {
+function OverflowMenu({
+  items,
+}: {
+  items: { label: string; onClick: () => void; danger?: boolean }[];
+}) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (!open) return;

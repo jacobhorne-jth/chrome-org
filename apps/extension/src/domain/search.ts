@@ -48,7 +48,13 @@ export function fuzzyScore(query: string, text: string): number | null {
         runBonus = 0;
       }
       const prevChar = ti > 0 ? t[ti - 1] : " ";
-      if (ti === 0 || prevChar === " " || prevChar === "/" || prevChar === "-" || prevChar === ".") {
+      if (
+        ti === 0 ||
+        prevChar === " " ||
+        prevChar === "/" ||
+        prevChar === "-" ||
+        prevChar === "."
+      ) {
         charScore += 2; // word-boundary bonus
       }
       score += charScore;
@@ -140,7 +146,8 @@ export function search(workspaces: Workspace[], rawQuery: string): GroupedResult
     for (const action of w.launchActions) {
       const candidates: (string | undefined)[] = [action.label, action.type];
       if (action.type === "application") candidates.push(action.applicationName, action.bundleId);
-      if (action.type === "vscode") candidates.push(folderName(action.targetPath), action.targetPath);
+      if (action.type === "vscode")
+        candidates.push(folderName(action.targetPath), action.targetPath);
       if (action.type === "url") candidates.push(action.url, action.preferredApplication);
       if (action.type === "path") candidates.push(action.path, folderName(action.path));
       if (action.type === "discord") candidates.push(action.channelUrl);

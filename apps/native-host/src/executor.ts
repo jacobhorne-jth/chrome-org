@@ -87,7 +87,11 @@ export const defaultDeps: ExecutorDeps = {
   vscodeAppInstalled: defaultVscodeAppInstalled,
 };
 
-function ok(action: NativeRequest["action"], message: string, detail?: Record<string, unknown>): NativeResponse {
+function ok(
+  action: NativeRequest["action"],
+  message: string,
+  detail?: Record<string, unknown>,
+): NativeResponse {
   return { action, status: "success", message, detail };
 }
 function fail(action: NativeRequest["action"], message: string): NativeResponse {
@@ -149,9 +153,13 @@ export async function executeRequest(
       else return fail(req.action, "Provide applicationName or bundleId");
       const res = await deps.run("/usr/bin/open", args);
       return res.code === 0
-        ? ok(req.action, `${req.action === "openApplication" ? "Launched" : "Focused"} application`, {
-            target: req.bundleId ?? req.applicationName,
-          })
+        ? ok(
+            req.action,
+            `${req.action === "openApplication" ? "Launched" : "Focused"} application`,
+            {
+              target: req.bundleId ?? req.applicationName,
+            },
+          )
         : fail(req.action, res.stderr || "Application not found");
     }
 

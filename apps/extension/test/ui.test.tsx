@@ -79,21 +79,27 @@ describe("CommandPalette", () => {
     render(<CommandPalette workspaces={makeWorkspaces()} onClose={() => {}} onPick={onPick} />);
     fireEvent.change(screen.getByLabelText("Search"), { target: { value: "solana" } });
     fireEvent.keyDown(screen.getByLabelText("Search"), { key: "Enter" });
-    expect(onPick).toHaveBeenCalledWith(expect.objectContaining({ kind: "tab", url: "https://solana.com" }));
+    expect(onPick).toHaveBeenCalledWith(
+      expect.objectContaining({ kind: "tab", url: "https://solana.com" }),
+    );
   });
 });
 
 describe("WorkspaceRow", () => {
   it("does not show the tab list by default (keeps UI compact)", () => {
     const [ws] = makeWorkspaces();
-    render(<WorkspaceRow workspace={ws!} onLaunch={() => {}} onEdit={() => {}} onChanged={() => {}} />);
+    render(
+      <WorkspaceRow workspace={ws!} onLaunch={() => {}} onEdit={() => {}} onChanged={() => {}} />,
+    );
     expect(screen.queryByText("GitHub")).toBeNull();
     expect(screen.getByText(/2 tabs/)).toBeTruthy();
   });
 
   it("expands the tab list only when the tab count is clicked", () => {
     const [ws] = makeWorkspaces();
-    render(<WorkspaceRow workspace={ws!} onLaunch={() => {}} onEdit={() => {}} onChanged={() => {}} />);
+    render(
+      <WorkspaceRow workspace={ws!} onLaunch={() => {}} onEdit={() => {}} onChanged={() => {}} />,
+    );
     fireEvent.click(screen.getByText(/2 tabs/));
     expect(screen.getByText(/GitHub/)).toBeTruthy();
   });
@@ -101,11 +107,21 @@ describe("WorkspaceRow", () => {
   it("shows Open for a closed workspace and Focus for an open one", () => {
     const wss = makeWorkspaces();
     const { rerender } = render(
-      <WorkspaceRow workspace={wss[0]!} onLaunch={() => {}} onEdit={() => {}} onChanged={() => {}} />,
+      <WorkspaceRow
+        workspace={wss[0]!}
+        onLaunch={() => {}}
+        onEdit={() => {}}
+        onChanged={() => {}}
+      />,
     );
     expect(screen.getByText("Open")).toBeTruthy();
     rerender(
-      <WorkspaceRow workspace={wss[1]!} onLaunch={() => {}} onEdit={() => {}} onChanged={() => {}} />,
+      <WorkspaceRow
+        workspace={wss[1]!}
+        onLaunch={() => {}}
+        onEdit={() => {}}
+        onChanged={() => {}}
+      />,
     );
     expect(screen.getByText("Focus")).toBeTruthy();
   });

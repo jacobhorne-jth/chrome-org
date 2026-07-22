@@ -31,7 +31,9 @@ export function WorkspaceRow({ workspace: ws, onLaunch, onEdit, onChanged }: Pro
 
   async function saveNow() {
     const res = await rpc({ type: "saveNow", id: ws.id });
-    onChanged(res.ok ? (res.data.saved ? "Saved current window" : "No open window to save") : res.error);
+    onChanged(
+      res.ok ? (res.data.saved ? "Saved current window" : "No open window to save") : res.error,
+    );
   }
   async function saveAndClose() {
     const res = await rpc({ type: "saveAndClose", id: ws.id });
@@ -83,7 +85,10 @@ export function WorkspaceRow({ workspace: ws, onLaunch, onEdit, onChanged }: Pro
               {tabCount} tab{tabCount === 1 ? "" : "s"}
             </button>
             {actionTypes.length > 0 && (
-              <span title={actionTypes.join(", ")} aria-label={`actions: ${actionTypes.join(", ")}`}>
+              <span
+                title={actionTypes.join(", ")}
+                aria-label={`actions: ${actionTypes.join(", ")}`}
+              >
                 {actionTypes.map((t) => (
                   <span key={t} className="dot" style={{ marginRight: 2 }}>
                     {actionIcon(t)}

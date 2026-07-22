@@ -11,7 +11,7 @@ import { z } from "zod";
 export const NATIVE_PROTOCOL_VERSION = 1 as const;
 
 /** Characters that must never appear in a path or app name we hand to the OS. */
-const SHELL_METACHARACTERS = /[;&|`$(){}<>\n\r\t*?!\[\]\\]/;
+const SHELL_METACHARACTERS = /[;&|`$(){}<>\n\r\t*?![\]\\]/;
 
 /** Reject obvious shell-injection attempts in free-form string fields. */
 const safeString = (label: string) =>

@@ -57,13 +57,10 @@ export type RpcResponseMap = {
 };
 
 export type RpcResult<T extends RpcRequest["type"]> =
-  | { ok: true; data: RpcResponseMap[T] }
-  | { ok: false; error: string };
+  { ok: true; data: RpcResponseMap[T] } | { ok: false; error: string };
 
 /** Send a typed RPC to the background service worker. */
-export async function rpc<T extends RpcRequest>(
-  request: T,
-): Promise<RpcResult<T["type"]>> {
+export async function rpc<T extends RpcRequest>(request: T): Promise<RpcResult<T["type"]>> {
   try {
     const res = (await chrome.runtime.sendMessage(request)) as RpcResult<T["type"]>;
     if (res == null) return { ok: false, error: "No response from background worker" };

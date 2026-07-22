@@ -34,7 +34,10 @@ export class FakeBrowser implements BrowserApi {
   public sendNativeCalls: unknown[] = [];
 
   // --- test helpers ---
-  seedWindow(tabs: Partial<FakeTab>[], opts: { focused?: boolean; type?: string } = {}): WindowInfo {
+  seedWindow(
+    tabs: Partial<FakeTab>[],
+    opts: { focused?: boolean; type?: string } = {},
+  ): WindowInfo {
     const id = this.nextWindowId++;
     const win: FakeWindow = {
       id,

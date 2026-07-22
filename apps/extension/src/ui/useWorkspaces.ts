@@ -27,7 +27,11 @@ export function useWorkspaces(): {
   useEffect(() => {
     void refresh();
     const listener = (message: unknown) => {
-      if (message && typeof message === "object" && (message as { type?: string }).type === "dataChanged") {
+      if (
+        message &&
+        typeof message === "object" &&
+        (message as { type?: string }).type === "dataChanged"
+      ) {
         void refresh();
       }
     };
@@ -42,7 +46,11 @@ export function useWorkspaces(): {
 export function useOpenPaletteSignal(onOpen: () => void): void {
   useEffect(() => {
     const listener = (message: unknown) => {
-      if (message && typeof message === "object" && (message as { type?: string }).type === "openPalette") {
+      if (
+        message &&
+        typeof message === "object" &&
+        (message as { type?: string }).type === "openPalette"
+      ) {
         onOpen();
       }
     };

@@ -21,7 +21,12 @@ const workspaces: Workspace[] = [
     description: "web3 research",
     browser: {
       tabs: [
-        { url: "https://github.com/me/chain", title: "GitHub - chain repo", pinned: true, index: 0 },
+        {
+          url: "https://github.com/me/chain",
+          title: "GitHub - chain repo",
+          pinned: true,
+          index: 0,
+        },
         { url: "https://docs.solana.com", title: "Solana Docs", pinned: false, index: 1 },
       ],
       activeTabIndex: 0,

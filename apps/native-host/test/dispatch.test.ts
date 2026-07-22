@@ -90,7 +90,11 @@ describe("executor behavior via handleMessage", () => {
   });
 
   it("reports an error when the app is not found (open exits non-zero)", async () => {
-    const run = vi.fn(async (): Promise<SpawnResult> => ({ code: 1, stdout: "", stderr: "not found" }));
+    const run = vi.fn(async (): Promise<SpawnResult> => ({
+      code: 1,
+      stdout: "",
+      stderr: "not found",
+    }));
     const { deps } = makeDeps({ run: run as unknown as ExecutorDeps["run"] });
     const res = await handleMessage(
       { action: "openApplication", applicationName: "Nonexistent" },
@@ -117,8 +121,6 @@ describe("executor behavior via handleMessage", () => {
       deps,
     );
     expect(res.status).toBe("success");
-    expect(run).toHaveBeenCalledWith("/usr/bin/open", [
-      "https://example.com/a%20b?q=hi%20there",
-    ]);
+    expect(run).toHaveBeenCalledWith("/usr/bin/open", ["https://example.com/a%20b?q=hi%20there"]);
   });
 });

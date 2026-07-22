@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { WorkspaceManager, WINDOW_MAP_KEY } from "../src/domain/manager.js";
 import { WorkspaceRepository } from "../src/domain/repository.js";
 import { NativeClient } from "../src/domain/nativeClient.js";
@@ -125,10 +125,15 @@ describe("WorkspaceManager: launch actions", () => {
     const { api, mgr, repo } = setup();
     api.nativeHandler = (msg) => {
       const m = msg as { action: string };
-      if (m.action === "openVscodeWorkspace") return { action: m.action, status: "error", message: "no code CLI" };
+      if (m.action === "openVscodeWorkspace")
+        return { action: m.action, status: "error", message: "no code CLI" };
       return { action: m.action, status: "success" };
     };
-    const ws = await repo.create({ name: "WS", browser: browserState(), launchActions: [vscodeAction] });
+    const ws = await repo.create({
+      name: "WS",
+      browser: browserState(),
+      launchActions: [vscodeAction],
+    });
     const result = await mgr.launch(ws.id);
     expect(result.browser.status).toBe("success");
     expect(result.actions["a1"]?.status).toBe("error");
@@ -140,7 +145,11 @@ describe("WorkspaceManager: launch actions", () => {
       const m = msg as { action: string };
       return { action: m.action, status: "fallback", message: "Opened channel URL in browser" };
     };
-    const discord: LaunchAction = { id: "d1", type: "discord", channelUrl: "https://discord.com/channels/1/2" };
+    const discord: LaunchAction = {
+      id: "d1",
+      type: "discord",
+      channelUrl: "https://discord.com/channels/1/2",
+    };
     const ws = await repo.create({ name: "WS", browser: browserState(), launchActions: [discord] });
     const result = await mgr.launch(ws.id);
     expect(result.actions["d1"]?.status).toBe("fallback");
@@ -149,7 +158,11 @@ describe("WorkspaceManager: launch actions", () => {
   it("reports an error result when the native host is unavailable", async () => {
     const { mgr, repo } = setup();
     // no nativeHandler -> sendNativeMessage throws
-    const ws = await repo.create({ name: "WS", browser: browserState(), launchActions: [vscodeAction] });
+    const ws = await repo.create({
+      name: "WS",
+      browser: browserState(),
+      launchActions: [vscodeAction],
+    });
     const result = await mgr.launch(ws.id);
     expect(result.browser.status).toBe("success"); // browser still restored
     expect(result.actions["a1"]?.status).toBe("error");
