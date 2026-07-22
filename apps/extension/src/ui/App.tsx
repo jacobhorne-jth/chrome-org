@@ -120,13 +120,14 @@ export function App() {
   return (
     <div className="app">
       <div className="toolbar">
-        <input
+        <button
           className="search-input"
-          placeholder="Search… (⌘K)"
-          onFocus={() => setPaletteOpen(true)}
-          readOnly
+          style={{ textAlign: "left", color: "var(--text-muted)" }}
+          onClick={() => setPaletteOpen(true)}
           aria-label="Open command palette"
-        />
+        >
+          Search… (⌘K)
+        </button>
         <button className="icon-btn" title="New from current window" onClick={createFromWindow}>
           ＋win
         </button>
