@@ -109,10 +109,14 @@ export function App() {
     document.addEventListener("focusin", trackFocus);
     window.addEventListener("focus", reclaim);
     document.addEventListener("visibilitychange", reclaim);
+    // Moving the mouse into the panel also reclaims focus, so keyboard (Esc/Tab)
+    // works again after returning from another window without needing a click.
+    document.addEventListener("pointermove", reclaim);
     return () => {
       document.removeEventListener("focusin", trackFocus);
       window.removeEventListener("focus", reclaim);
       document.removeEventListener("visibilitychange", reclaim);
+      document.removeEventListener("pointermove", reclaim);
     };
   }, [view.mode]);
 

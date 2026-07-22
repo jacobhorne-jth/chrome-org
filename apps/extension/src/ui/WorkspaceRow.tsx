@@ -73,11 +73,15 @@ export function WorkspaceRow({ workspace: ws, onLaunch, onEdit, onChanged }: Pro
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             onLaunch();
-          } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+          } else if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Tab") {
+            // Handle Tab ourselves so it moves between rows even when macOS
+            // "Keyboard navigation" is off (which otherwise makes Tab skip
+            // button-like controls entirely).
             e.preventDefault();
             const rows = Array.from(document.querySelectorAll<HTMLElement>('.row[role="button"]'));
             const idx = rows.indexOf(e.currentTarget as HTMLElement);
-            const next = e.key === "ArrowDown" ? rows[idx + 1] : rows[idx - 1];
+            const forward = e.key === "ArrowDown" || (e.key === "Tab" && !e.shiftKey);
+            const next = forward ? rows[idx + 1] : rows[idx - 1];
             next?.focus();
           }
         }}
