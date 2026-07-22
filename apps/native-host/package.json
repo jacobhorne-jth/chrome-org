@@ -1,15 +1,10 @@
 {
-  "name": "@chrome-org/shared",
+  "name": "@chrome-org/native-host",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
+  "bin": {
+    "chrome-org-host": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -18,9 +13,11 @@
     "test:run": "vitest run"
   },
   "dependencies": {
+    "@chrome-org/shared": "workspace:*",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/node": "^20.14.0",
     "typescript": "^5.5.4",
     "vitest": "^2.0.5"
   }
