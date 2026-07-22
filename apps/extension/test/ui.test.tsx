@@ -104,6 +104,17 @@ describe("WorkspaceRow", () => {
     expect(screen.getByText(/GitHub/)).toBeTruthy();
   });
 
+  it("launches when the focused row receives Enter", () => {
+    const [ws] = makeWorkspaces();
+    const onLaunch = vi.fn();
+    render(
+      <WorkspaceRow workspace={ws!} onLaunch={onLaunch} onEdit={() => {}} onChanged={() => {}} />,
+    );
+    const row = screen.getByRole("button", { name: /Blockchain, closed/i });
+    fireEvent.keyDown(row, { key: "Enter" });
+    expect(onLaunch).toHaveBeenCalledTimes(1);
+  });
+
   it("shows Open for a closed workspace and Focus for an open one", () => {
     const wss = makeWorkspaces();
     const { rerender } = render(

@@ -60,7 +60,22 @@ export function WorkspaceRow({ workspace: ws, onLaunch, onEdit, onChanged }: Pro
 
   return (
     <div>
-      <div className="row">
+      <div
+        className="row"
+        role="button"
+        tabIndex={0}
+        aria-label={`${ws.name}, ${ws.runtime.isOpen ? "open" : "closed"}. Press Enter to ${
+          ws.runtime.isOpen ? "focus" : "open"
+        }.`}
+        onKeyDown={(e) => {
+          // Only act when the row itself is focused, not an inner control.
+          if (e.target !== e.currentTarget) return;
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onLaunch();
+          }
+        }}
+      >
         <span
           className="swatch"
           style={ws.color ? { background: ws.color } : undefined}
@@ -100,7 +115,7 @@ export function WorkspaceRow({ workspace: ws, onLaunch, onEdit, onChanged }: Pro
           </div>
         </div>
 
-        <button className="primary-btn" onClick={onLaunch}>
+        <button className="primary-btn" onClick={onLaunch} tabIndex={-1}>
           {ws.runtime.isOpen ? "Focus" : "Open"}
         </button>
 
