@@ -21,6 +21,12 @@ export function App() {
   const openPalette = useCallback(() => setPaletteOpen(true), []);
   useOpenPaletteSignal(openPalette);
 
+  // Track palette state in a ref so the global key handler always reads the latest.
+  const paletteOpenRef = useRef(paletteOpen);
+  useEffect(() => {
+    paletteOpenRef.current = paletteOpen;
+  }, [paletteOpen]);
+
   const checkHealth = useCallback(async () => {
     const res = await rpc({ type: "healthCheck" });
     if (res.ok) setHealth({ ok: res.data.ok, message: res.data.message });
@@ -48,11 +54,18 @@ export function App() {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setPaletteOpen(true);
+      } else if (e.key === "Escape") {
+        if (paletteOpenRef.current) {
+          setPaletteOpen(false);
+        } else if (view.mode === "list") {
+          // Nothing open in-panel — close the side panel itself.
+          window.close();
+        }
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [view.mode]);
 
   function flashToast(msg: string) {
     setToast(msg);

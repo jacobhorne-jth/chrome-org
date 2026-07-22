@@ -22,7 +22,18 @@ export function CommandPalette({ workspaces, onClose, onPick }: Props) {
   const flat = useMemo(() => flattenResults(grouped), [grouped]);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    // When the palette is opened via a keyboard command, the side panel can mount
+    // before it actually has window focus, so a single focus() call is dropped.
+    // Focus the window, focus the input now, and retry once on the next frame.
+    const focusInput = () => inputRef.current?.focus();
+    window.focus();
+    focusInput();
+    const raf = requestAnimationFrame(focusInput);
+    const timer = window.setTimeout(focusInput, 80);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(timer);
+    };
   }, []);
   useEffect(() => {
     setSelected(0);
@@ -90,6 +101,7 @@ export function CommandPalette({ workspaces, onClose, onPick }: Props) {
       <div className="palette" role="dialog" aria-label="Command palette" aria-modal="true">
         <input
           ref={inputRef}
+          autoFocus
           className="palette-search"
           placeholder="Search workspaces, tabs, actions…"
           value={query}
