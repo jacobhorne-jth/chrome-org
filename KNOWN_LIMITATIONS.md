@@ -20,10 +20,10 @@ Honest constraints. Nothing here is hidden behind a "success" message at runtime
 ## VS Code
 
 - Detection prefers the `code` CLI (checked at `/usr/local/bin`, `/opt/homebrew/
-  bin`, inside the VS Code app bundle, and on `PATH`), then falls back to opening
+bin`, inside the VS Code app bundle, and on `PATH`), then falls back to opening
   the app by bundle id. If neither is available the action returns an actionable
-  setup error ("install VS Code and run *Shell Command: Install 'code' command in
-  PATH*").
+  setup error ("install VS Code and run _Shell Command: Install 'code' command in
+  PATH_").
 - "Reuse an existing window instead of duplicating" is delegated to the `code`
   CLI, which already focuses/reuses a window for the same folder. We do not manage
   VS Code editor tabs ourselves; VS Code's own session restore handles that.

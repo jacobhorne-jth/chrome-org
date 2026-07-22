@@ -4,7 +4,7 @@
 
 1. Did you build the host? `pnpm --filter @chrome-org/native-host build` (or
    `pnpm build`). The install script refuses to run if `apps/native-host/dist/
-   index.js` is missing.
+index.js` is missing.
 2. Did you install with the **right** extension ID? Copy it from the extension's
    card at `chrome://extensions`, then
    `node scripts/install-native-host.mjs --extension-id=<ID>`.

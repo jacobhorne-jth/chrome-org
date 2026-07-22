@@ -16,12 +16,12 @@ pnpm build            # shared -> native-host + extension: PASS
 
 ## Automated test results (all passing)
 
-| Package                 | Test files | Tests |
-| ----------------------- | ---------- | ----- |
-| `@chrome-org/shared`    | 2          | 17    |
-| `@chrome-org/native-host` | 4        | 27    |
-| `@chrome-org/extension` | 6          | 54    |
-| **Total**               | **12**     | **98** |
+| Package                   | Test files | Tests  |
+| ------------------------- | ---------- | ------ |
+| `@chrome-org/shared`      | 2          | 17     |
+| `@chrome-org/native-host` | 4          | 27     |
+| `@chrome-org/extension`   | 6          | 54     |
+| **Total**                 | **12**     | **98** |
 
 ### What the automated tests cover
 
@@ -68,7 +68,7 @@ collapsed by default and expands on click; Open vs Focus label).
 - **Uninstall script** removes the manifest(s) and the generated launcher.
 - **Production build** emits a valid unpacked extension: `manifest.json`,
   `background.js` (module service worker importing `./chunks/…`), `sidepanel.html`
-  + hashed assets.
+  - hashed assets.
 
 ## Manual steps that require your GUI (not automatable here)
 

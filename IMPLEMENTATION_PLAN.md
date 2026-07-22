@@ -51,7 +51,7 @@ Three packages in a pnpm monorepo:
   `reconcile()` rewrites it from the validated session map + real windows, and
   drops stale entries.
 - Rapid double-launch is de-duplicated by an in-flight `Map<workspaceId,
-  Promise>` so two clicks share one launch and one window.
+Promise>` so two clicks share one launch and one window.
 
 ## Session saving design
 

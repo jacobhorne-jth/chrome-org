@@ -92,7 +92,7 @@ The command palette is bound to a Chrome **command**, configurable at
 - **Open the command palette** — default `⌘⇧K` (Command+Shift+K)
 - **Open the side panel** — default `⌘⇧O` (Command+Shift+O)
 
-Set the scope to *Global* if you want it to work while Chrome is unfocused.
+Set the scope to _Global_ if you want it to work while Chrome is unfocused.
 Inside the side panel, `⌘K` also opens the palette.
 
 ## Using it
@@ -116,13 +116,13 @@ when you want to see them.
 
 ## Launch actions
 
-| Type          | What it does                                                        |
-| ------------- | ------------------------------------------------------------------- |
+| Type          | What it does                                                            |
+| ------------- | ----------------------------------------------------------------------- |
 | `vscode`      | Opens a folder or `.code-workspace` (reuses an existing VS Code window) |
-| `discord`     | Opens the Discord app to a channel; falls back to the browser URL   |
-| `application` | Launches/focuses a macOS app by name or bundle id                   |
-| `url`         | Opens a URL, optionally in a preferred app                          |
-| `path`        | Opens a local file or directory                                     |
+| `discord`     | Opens the Discord app to a channel; falls back to the browser URL       |
+| `application` | Launches/focuses a macOS app by name or bundle id                       |
+| `url`         | Opens a URL, optionally in a preferred app                              |
+| `path`        | Opens a local file or directory                                         |
 
 ## Development
 
