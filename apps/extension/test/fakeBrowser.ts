@@ -131,6 +131,10 @@ export class FakeBrowser implements BrowserApi {
     for (const w of this.windows.values()) w.focused = w.id === windowId;
   }
 
+  async removeWindow(windowId: number): Promise<void> {
+    this.windows.delete(windowId);
+  }
+
   async updateWindowBounds(windowId: number, bounds: WindowBounds): Promise<void> {
     const win = this.windows.get(windowId);
     if (win) win.bounds = bounds;

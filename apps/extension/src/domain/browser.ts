@@ -50,6 +50,7 @@ export interface BrowserApi {
   getWindow(windowId: number): Promise<WindowInfo | null>;
   getAllNormalWindows(): Promise<WindowInfo[]>;
   focusWindow(windowId: number): Promise<void>;
+  removeWindow(windowId: number): Promise<void>;
   updateWindowBounds(windowId: number, bounds: WindowBounds): Promise<void>;
 
   // Tabs
@@ -118,6 +119,9 @@ export function createRealBrowserApi(): BrowserApi {
     },
     async focusWindow(windowId) {
       await c.windows.update(windowId, { focused: true, drawAttention: true });
+    },
+    async removeWindow(windowId) {
+      await c.windows.remove(windowId);
     },
     async updateWindowBounds(windowId, bounds) {
       await c.windows.update(windowId, {

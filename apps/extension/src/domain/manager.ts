@@ -275,12 +275,21 @@ export class WorkspaceManager {
     await this.repo.setRuntime(workspaceId, { isOpen: false, windowId: undefined });
   }
 
-  /** Save then close (user-initiated). Closes the managed window if still open. */
+  /** Save then close (user-initiated). Actually closes the managed Chrome window. */
   async saveAndClose(workspaceId: string): Promise<void> {
     const windowId = await this.liveWindowFor(workspaceId);
     if (windowId !== undefined) {
+      // Capture the final state while the window still exists.
       await this.saveWindow(workspaceId, "close");
+      // Unmap first so the resulting windows.onRemoved event is a no-op.
       await this.unmapWindow(windowId);
+      await this.repo.setRuntime(workspaceId, { isOpen: false, windowId: undefined });
+      try {
+        await this.api.removeWindow(windowId);
+      } catch {
+        // Window may already have been closed by the user; state is already correct.
+      }
+      return;
     }
     await this.repo.setRuntime(workspaceId, { isOpen: false, windowId: undefined });
   }

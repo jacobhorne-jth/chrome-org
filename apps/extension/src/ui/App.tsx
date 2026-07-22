@@ -57,8 +57,12 @@ export function App() {
       } else if (e.key === "Escape") {
         if (paletteOpenRef.current) {
           setPaletteOpen(false);
-        } else if (view.mode === "list") {
-          // Nothing open in-panel — close the side panel itself.
+        } else if (view.mode === "list" && document.hasFocus()) {
+          // Nothing open in-panel — close the side panel itself. preventDefault
+          // stops Chrome's default Escape handling (which could otherwise act on
+          // the parent window).
+          e.preventDefault();
+          e.stopPropagation();
           window.close();
         }
       }

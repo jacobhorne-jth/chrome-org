@@ -193,6 +193,21 @@ describe("WorkspaceManager: close & reconcile", () => {
     expect(await mgr.workspaceIdForWindow(windowId!)).toBeUndefined();
   });
 
+  it("saveAndClose actually removes the managed window and marks closed", async () => {
+    const { api, mgr, repo } = setup();
+    const ws = await repo.create({ name: "WS", browser: browserState() });
+    await mgr.launch(ws.id);
+    const [windowId] = api.listWindowIds();
+    expect(api.listWindowIds()).toHaveLength(1);
+
+    await mgr.saveAndClose(ws.id);
+
+    expect(await api.getWindow(windowId!)).toBeNull(); // window really gone
+    expect(api.listWindowIds()).toHaveLength(0);
+    expect((await repo.get(ws.id))?.runtime.isOpen).toBe(false);
+    expect(await mgr.workspaceIdForWindow(windowId!)).toBeUndefined();
+  });
+
   it("removes stale mappings and marks closed on reconcile", async () => {
     const { api, mgr, repo } = setup();
     const ws = await repo.create({ name: "WS", browser: browserState() });
